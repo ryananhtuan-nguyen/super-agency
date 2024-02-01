@@ -485,3 +485,19 @@ export const upsertSubAccount = async (subAccount: SubAccount) => {
   })
   return response
 }
+
+//==============================================================================
+//==============================================================================
+//==========================GET USER PERMISSIONS================================
+//==============================================================================
+//==============================================================================
+
+export const getUserPermissions = async (userId: string) => {
+  const response = await db.user.findUnique({
+    where: {
+      id: userId,
+    },
+    select: { Permissions: { include: { SubAccount: true } } },
+  })
+  return response
+}
