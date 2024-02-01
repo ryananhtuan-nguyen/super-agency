@@ -13,15 +13,13 @@ const AgencyPage = async ({
   //verify user
   const agencyId = await verifyAndAcceptInvitation()
 
-  console.log(agencyId)
-
   //get users details
   const user = await getAuthUserDetails()
 
   if (agencyId) {
-    if (user.role === 'SUBACCOUNT_GUEST' || user.role === 'SUBACCOUNT_USER') {
+    if (user?.role === 'SUBACCOUNT_GUEST' || user?.role === 'SUBACCOUNT_USER') {
       return redirect('/subaccount')
-    } else if (user.role === 'AGENCY_OWNER' || user.role === 'AGENCY_ADMIN') {
+    } else if (user?.role === 'AGENCY_OWNER' || user?.role === 'AGENCY_ADMIN') {
       if (searchParams.plan) {
         return redirect(`/agency/${agencyId}/billing?plan=${searchParams.plan}`)
       }
