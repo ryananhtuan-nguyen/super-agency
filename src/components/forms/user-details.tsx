@@ -1,4 +1,5 @@
 'use client'
+import { UserWithPermissionsAndSubAccounts } from '@/lib/types'
 import { SubAccount, User } from '@prisma/client'
 import React, { useState } from 'react'
 
@@ -11,7 +12,7 @@ type Props = {
 
 const UserDetails = ({ id, type, subAccounts, userData }: Props) => {
   const [subAccountPermissions, setSubAccountPermissions] =
-    useState<UserWithPermissionsAndSubAccount>(null)
+    useState<UserWithPermissionsAndSubAccounts>(null)
   return <div>UserDetails</div>
 }
 
