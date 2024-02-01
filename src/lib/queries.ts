@@ -3,7 +3,8 @@
 import { clerkClient, currentUser } from '@clerk/nextjs'
 import { db } from './db'
 import { redirect } from 'next/navigation'
-import { Agency, Permissions, Plan, User } from '@prisma/client'
+import { Agency, Permissions, Plan, SubAccount, User } from '@prisma/client'
+import { v4 } from 'uuid'
 
 //==============================================================================
 //==============================================================================
@@ -236,6 +237,12 @@ export const verifyAndAcceptInvitation = async () => {
   }
 }
 
+//==============================================================================
+//==============================================================================
+//=========================UPDATE AGENCY DETAILS================================
+//==============================================================================
+//==============================================================================
+
 export const updateAgencyDetails = async (
   agencyId: string,
   agencyDetails: Partial<Agency>
@@ -250,10 +257,23 @@ export const updateAgencyDetails = async (
   return response
 }
 
+//==============================================================================
+//==============================================================================
+//==============================DELETE AN AGENCY================================
+//==============================================================================
+//==============================================================================
+
 export const deleteAgency = async (agencyId: string) => {
   const response = await db.agency.delete({ where: { id: agencyId } })
   return response
 }
+
+//==============================================================================
+//==============================================================================
+//==========================INITIALIZE AN USER==================================
+//====================INSERT METADATA TO CLERK USER=============================
+//==============================================================================
+//==============================================================================
 
 export const initUser = async (newUser: Partial<User>) => {
   const user = await currentUser()
@@ -281,6 +301,12 @@ export const initUser = async (newUser: Partial<User>) => {
 
   return userData
 }
+
+//==============================================================================
+//==============================================================================
+//==========================UPSERT AN AGENCY====================================
+//==============================================================================
+//==============================================================================
 
 export const upsertAgency = async (agency: Agency, price?: Plan) => {
   if (!agency.companyEmail) return null
@@ -340,4 +366,122 @@ export const upsertAgency = async (agency: Agency, price?: Plan) => {
   } catch (error) {
     console.log('🔴 Error upserting agency 🔴')
   }
+}
+
+//==============================================================================
+//==============================================================================
+//==========================GET NOTIFICATIONS===================================
+//===============ALSO RETURN USER TO CHECK IN FRONT-END=========================
+//==============================================================================
+//==============================================================================
+
+export const getNotificationAndUser = async (agencyId: string) => {
+  try {
+    const response = await db.notification.findMany({
+      where: { agencyId },
+      include: { User: true },
+      orderBy: {
+        createdAt: 'desc',
+      },
+    })
+    return response
+  } catch (error) {
+    console.log('🔴 Error getting Notifications 🔴')
+    return null
+  }
+}
+
+//==============================================================================
+//==============================================================================
+//==========================UPSERT AN SUBACCOUNT================================
+//==============================================================================
+//==============================================================================
+
+export const upsertSubAccount = async (subAccount: SubAccount) => {
+  if (!subAccount.companyEmail) return null
+  const agencyOwner = await db.user.findFirst({
+    where: {
+      Agency: {
+        id: subAccount.agencyId,
+      },
+      role: 'AGENCY_OWNER',
+    },
+  })
+
+  if (!agencyOwner) {
+    console.log('🔴 Error: Could not create subaccount 🔴')
+    return null
+  }
+
+  const permissionId = v4()
+  const response = await db.subAccount.upsert({
+    where: {
+      id: subAccount.id,
+    },
+    update: subAccount,
+    create: {
+      ...subAccount,
+      Permissions: {
+        create: {
+          access: true,
+          email: agencyOwner.email,
+          id: permissionId,
+        },
+        connect: {
+          subAccountId: subAccount.id,
+          id: permissionId,
+        },
+      },
+      Pipeline: {
+        create: {
+          name: 'Lead Cycle',
+        },
+      },
+      SidebarOption: {
+        create: [
+          {
+            name: 'Launchpad',
+            icon: 'clipboardIcon',
+            link: `/subaccount/${subAccount.id}/launchpad`,
+          },
+          {
+            name: 'Settings',
+            icon: 'settings',
+            link: `/subaccount/${subAccount.id}/settings`,
+          },
+          {
+            name: 'Funnels',
+            icon: 'pipelines',
+            link: `/subaccount/${subAccount.id}/funnels`,
+          },
+          {
+            name: 'Media',
+            icon: 'database',
+            link: `/subaccount/${subAccount.id}/media`,
+          },
+          {
+            name: 'Automations',
+            icon: 'chip',
+            link: `/subaccount/${subAccount.id}/automations`,
+          },
+          {
+            name: 'Pipelines',
+            icon: 'flag',
+            link: `/subaccount/${subAccount.id}/pipelines`,
+          },
+          {
+            name: 'Contacts',
+            icon: 'person',
+            link: `/subaccount/${subAccount.id}/contacts`,
+          },
+          {
+            name: 'Dashboard',
+            icon: 'category',
+            link: `/subaccount/${subAccount.id}`,
+          },
+        ],
+      },
+    },
+  })
+  return response
 }
