@@ -29,7 +29,7 @@ import {
   FormLabel,
   FormMessage,
 } from '../ui/form'
-import { AgencyFormSchema } from '@/lib/agencyFormSchema'
+import { AgencyFormSchema } from '@/lib/form-schemas/agencyFormSchema'
 import {
   Card,
   CardContent,
