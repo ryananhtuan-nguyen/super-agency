@@ -1,4 +1,5 @@
 import { Notification, Prisma, Role } from '@prisma/client'
+import { getUserPermissions } from './queries'
 
 export type NotificationWithUser =
   | (Notification & {
