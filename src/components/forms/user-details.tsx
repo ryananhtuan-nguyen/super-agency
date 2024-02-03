@@ -329,8 +329,8 @@ const UserDetails = ({ id, type, subAccounts, userData }: Props) => {
             </Button>
 
             {/* Changing permissions section */}
-
-            {authUserData && authUserData.role == 'AGENCY_OWNER' && (
+            <h1>Hello world</h1>
+            {authUserData && authUserData.role === 'AGENCY_OWNER' && (
               <div>
                 <Separator className="my-4" />
                 <FormLabel>User Permissions</FormLabel>
