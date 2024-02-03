@@ -34,9 +34,17 @@ const SettingsPage = async ({ params }: Props) => {
 
   const subAccounts = agencyDetails.SubAccount
 
-  return <div className='flex lg:!flex-row flex-col gap-4'><AgencyDetails data={agencyDetails}/>
-  <UserDetails type="agency" id={params.agencyId} subAccounts={subAccounts} userData={userDetails}</div>
-
+  return (
+    <div className="flex lg:!flex-row flex-col gap-4">
+      <AgencyDetails data={agencyDetails} />
+      <UserDetails
+        type="agency"
+        id={params.agencyId}
+        subAccounts={subAccounts}
+        userData={userDetails}
+      />
+    </div>
+  )
 }
 
 export default SettingsPage

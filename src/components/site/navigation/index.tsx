@@ -70,7 +70,7 @@ const Navigation = ({ user }: Props) => {
             className: 'p-2 px-4',
           })}
         >
-          Login
+          {user ? 'Dash Board' : 'Login'}
         </Link>
         <UserButton />
         <ModeToggle />
