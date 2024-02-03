@@ -501,3 +501,26 @@ export const getUserPermissions = async (userId: string) => {
   })
   return response
 }
+
+//==============================================================================
+//==============================================================================
+//==============================UPDATE USER=====================================
+//==============================================================================
+//==============================================================================
+
+export const updateUser = async (user: Partial<User>) => {
+  const updatedUser = await db.user.update({
+    where: {
+      email: user.email,
+    },
+    data: { ...user },
+  })
+
+  await clerkClient.users.updateUserMetadata(updatedUser.id, {
+    privateMetadata: {
+      role: user.role || 'SUBACCOUNT_USER',
+    },
+  })
+
+  return updatedUser
+}
