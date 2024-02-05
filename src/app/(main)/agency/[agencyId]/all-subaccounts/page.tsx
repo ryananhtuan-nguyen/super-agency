@@ -24,6 +24,7 @@ import {
 } from '@/components/ui/command'
 import { getAuthUserDetails } from '@/lib/queries'
 import DeleteButton from './_components/delete-button'
+import CreateSubaccountButton from './_components/create-subaccount-button'
 
 type Props = {
   params: {
@@ -38,7 +39,11 @@ const AllSubaccountPage = async ({ params }: Props) => {
   return (
     <AlertDialog>
       <div className="flex flex-col">
-        <Button>Create</Button>
+        <CreateSubaccountButton
+          user={user}
+          id={params.agencyId}
+          className="w-[200px] self-end m-6"
+        />
         <Command className="rounded-lg bg-transparent">
           <CommandInput placeholder="Search Account..." />
           <CommandList>
