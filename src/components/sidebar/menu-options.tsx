@@ -258,7 +258,7 @@ const MenuOptions = ({
               </Command>
             </PopoverContent>
           </Popover>
-          <p className="text-muted-foreground text-xs mb-2">
+          <div className="text-muted-foreground text-xs mb-2">
             MENU LINKS
             <Separator className="mb-4" />
             <nav className="relative">
@@ -295,7 +295,7 @@ const MenuOptions = ({
                 </CommandList>
               </Command>
             </nav>
-          </p>
+          </div>
         </div>
       </SheetContent>
     </Sheet>
