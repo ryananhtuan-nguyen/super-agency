@@ -1,3 +1,8 @@
+import { CheckCircleIcon } from 'lucide-react'
+import Image from 'next/image'
+import Link from 'next/link'
+import React from 'react'
+
 import { Button } from '@/components/ui/button'
 import {
   Card,
@@ -7,10 +12,6 @@ import {
   CardTitle,
 } from '@/components/ui/card'
 import { db } from '@/lib/db'
-import { CheckCircleIcon } from 'lucide-react'
-import Image from 'next/image'
-import Link from 'next/link'
-import React from 'react'
 
 type Props = {
   params: {
@@ -94,13 +95,13 @@ const LaunchPadPage = async ({ params, searchParams }: Props) => {
               </div>
               {allDetailsExist ? (
                 <CheckCircleIcon
-                  size={15}
+                  size={50}
                   className="text-primary p-2 flex-shrink-0"
                 />
               ) : (
                 <Link
-                  href={`/agency/${params.agencyId}/settings`}
                   className="bg-primary py-2 px-4 rounded-md text-white"
+                  href={`/agency/${params.agencyId}/settings`}
                 >
                   Start
                 </Link>
