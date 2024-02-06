@@ -92,7 +92,7 @@ const SubAccountDetails: React.FC<SubAccountDetailsProps> = ({
       if (!response) throw new Error('No response from server')
       await saveActivityLogsNotification({
         agencyId: response.agencyId,
-        description: `${userName} | updated sub account | ${response.name}`,
+        description: `updated sub account | ${response.name}`,
         subaccountId: response.id,
       })
 

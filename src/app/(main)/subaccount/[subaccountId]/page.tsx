@@ -2,8 +2,8 @@ import React from 'react'
 
 type Props = {}
 
-const SubAccountIdPage = (props: Props) => {
+const SubaccountPageId = (props: Props) => {
   return <div>SubAccountIdPage</div>
 }
 
-export default SubAccountIdPage
+export default SubaccountPageId
