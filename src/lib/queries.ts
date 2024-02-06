@@ -730,3 +730,34 @@ export const getPipelineDetails = async (pipelineId: string) => {
 
   return response
 }
+
+//==============================================================================
+//==============================================================================
+//========================GET LANES WITH TICKETS AND TAGS=======================
+//==============================================================================
+//==============================================================================
+
+export const getLanesWithTicketAndTags = async (pipelineId: string) => {
+  const response = db.lane.findMany({
+    where: {
+      pipelineId,
+    },
+    orderBy: {
+      order: 'asc',
+    },
+    include: {
+      Tickets: {
+        orderBy: {
+          order: 'asc',
+        },
+        include: {
+          Tags: true,
+          Assigned: true,
+          Customer: true,
+        },
+      },
+    },
+  })
+
+  return response
+}
