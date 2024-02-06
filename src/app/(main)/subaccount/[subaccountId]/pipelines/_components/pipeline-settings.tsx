@@ -48,7 +48,7 @@ const PipelineSettings = ({ pipelineId, pipelines, subaccountId }: Props) => {
                 onClick={async () => {
                   try {
                     const response = await deletePipeline(pipelineId)
-                    //Challenge: Activity log
+
                     await saveActivityLogsNotification({
                       description: `Deleted pipeline | ${response.name}`,
                       subaccountId: subaccountId,
