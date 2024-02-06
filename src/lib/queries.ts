@@ -7,12 +7,15 @@ import {
   Agency,
   Permissions,
   Plan,
+  Prisma,
   Role,
   SubAccount,
   User,
 } from '@prisma/client'
 import { v4 } from 'uuid'
 import { CreateMediaType } from './types'
+import { z } from 'zod'
+import { CreateFunnelFormSchema } from './form-schemas/pipelineRelatedFormSchemas'
 
 //==============================================================================
 //==============================================================================
@@ -757,6 +760,52 @@ export const getLanesWithTicketAndTags = async (pipelineId: string) => {
         },
       },
     },
+  })
+
+  return response
+}
+
+//==============================================================================
+//==============================================================================
+//=================================UPSERT FUNNELS===============================
+//==============================================================================
+//==============================================================================
+
+export const upsertFunnel = async (
+  subaccountId: string,
+  funnel: z.infer<typeof CreateFunnelFormSchema> & { liveProducts: string },
+  funnelId: string
+) => {
+  const response = await db.funnel.upsert({
+    where: {
+      id: funnelId,
+    },
+    update: funnel,
+    create: {
+      ...funnel,
+      id: funnelId || v4(),
+      subAccountId: subaccountId,
+    },
+  })
+
+  return response
+}
+
+//==============================================================================
+//==============================================================================
+//================================UPSERT PIPELINE===============================
+//==============================================================================
+//==============================================================================
+
+export const upsertPipeline = async (
+  pipeline: Prisma.PipelineUncheckedCreateWithoutLaneInput
+) => {
+  const response = await db.pipeline.upsert({
+    where: {
+      id: pipeline.id || v4(),
+    },
+    update: pipeline,
+    create: pipeline,
   })
 
   return response
