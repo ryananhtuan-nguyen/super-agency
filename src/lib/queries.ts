@@ -5,11 +5,13 @@ import { db } from './db'
 import { redirect } from 'next/navigation'
 import {
   Agency,
+  Lane,
   Permissions,
   Plan,
   Prisma,
   Role,
   SubAccount,
+  Ticket,
   User,
 } from '@prisma/client'
 import { v4 } from 'uuid'
@@ -813,7 +815,7 @@ export const upsertPipeline = async (
 
 //==============================================================================
 //==============================================================================
-//================================DELETE PIPELINE BY ID===============================
+//==========================DELETE PIPELINE BY ID===============================
 //==============================================================================
 //==============================================================================
 
@@ -825,4 +827,56 @@ export const deletePipeline = async (pipelineId: string) => {
   })
 
   return response
+}
+
+//==============================================================================
+//==============================================================================
+//==============================UPDATE LANES ORDER==============================
+//==============================================================================
+//==============================================================================
+export const updateLanesOrder = async (lanes: Lane[]) => {
+  try {
+    const updateTrans = lanes.map((lane) =>
+      db.lane.update({
+        where: {
+          id: lane.id,
+        },
+        data: {
+          order: lane.order,
+        },
+      })
+    )
+
+    await db.$transaction(updateTrans)
+    console.log('🟢 Done reordered')
+  } catch (error) {
+    console.log("🔴Error update Lane's order", error)
+  }
+}
+
+//==============================================================================
+//==============================================================================
+//============================UPDATE TICKETS ORDER==============================
+//==============================================================================
+//==============================================================================
+
+export const updateTicketsOrder = async (tickets: Ticket[]) => {
+  try {
+    const updateTrans = tickets.map((ticket) =>
+      db.ticket.update({
+        where: {
+          id: ticket.id,
+        },
+        data: {
+          order: ticket.order,
+          laneId: ticket.laneId,
+        },
+      })
+    )
+
+    await db.$transaction(updateTrans)
+    console.log('🟢 Done reordered Tickets')
+  } catch (error) {
+    console.log('🔴 Error reordering tickets', error)
+  }
 }
