@@ -33,7 +33,6 @@ import { cn } from '@/lib/utils'
 import { useModal } from '@/providers/modal-provider'
 
 import Loading from '../global/loading'
-// import TagCreator from '../global/tag-creator'
 import { Avatar, AvatarFallback, AvatarImage } from '../ui/avatar'
 import { Button } from '../ui/button'
 import { Card, CardContent, CardHeader, CardTitle } from '../ui/card'
@@ -49,6 +48,7 @@ import { Popover, PopoverContent, PopoverTrigger } from '../ui/popover'
 import { Textarea } from '../ui/textarea'
 import { toast } from '../ui/use-toast'
 import { TicketFormSchema } from '@/lib/form-schemas/pipelineRelatedFormSchemas'
+import TagCreator from '../global/tag-creator'
 
 type Props = {
   laneId: string
@@ -200,11 +200,11 @@ const TicketForm = ({ getNewTicket, laneId, subaccountId }: Props) => {
               )}
             />
             <h3>Add tags</h3>
-            {/* <TagCreator
-              subAccountId={subaccountId}
+            <TagCreator
+              subaccountId={subaccountId}
               getSelectedTags={setTags}
               defaultTags={defaultData.ticket?.Tags || []}
-            /> */}
+            />
             <FormLabel>Assigned To Team Member</FormLabel>
             <Select onValueChange={setAssignedTo} defaultValue={assignedTo}>
               <SelectTrigger>
@@ -264,15 +264,15 @@ const TicketForm = ({ getNewTicket, laneId, subaccountId }: Props) => {
                     placeholder="Search..."
                     className="h-9"
                     value={search}
-                    onChangeCapture={async (value) => {
+                    onChangeCapture={async (event) => {
                       //@ts-ignore
-                      setSearch(value.target.value)
+                      setSearch(event.target.value)
                       if (saveTimerRef.current)
                         clearTimeout(saveTimerRef.current)
                       saveTimerRef.current = setTimeout(async () => {
                         const response = await searchContacts(
                           //@ts-ignore
-                          value.target.value
+                          event.target.value
                         )
                         setContactList(response)
                         setSearch('')
@@ -281,21 +281,23 @@ const TicketForm = ({ getNewTicket, laneId, subaccountId }: Props) => {
                   />
                   <CommandEmpty>No Customer found.</CommandEmpty>
                   <CommandGroup>
-                    {contactList.map((c) => (
+                    {contactList.map((currentContact) => (
                       <CommandItem
-                        key={c.id}
-                        value={c.id}
+                        key={currentContact.id}
+                        value={currentContact.id}
                         onSelect={(currentValue) => {
                           setContact(
                             currentValue === contact ? '' : currentValue
                           )
                         }}
                       >
-                        {c.name}
+                        {currentContact.name}
                         <CheckIcon
                           className={cn(
                             'ml-auto h-4 w-4',
-                            contact === c.id ? 'opacity-100' : 'opacity-0'
+                            contact === currentContact.id
+                              ? 'opacity-100'
+                              : 'opacity-0'
                           )}
                         />
                       </CommandItem>
@@ -305,7 +307,7 @@ const TicketForm = ({ getNewTicket, laneId, subaccountId }: Props) => {
               </PopoverContent>
             </Popover>
             <Button className="w-20 mt-4" disabled={isLoading} type="submit">
-              {form.formState.isSubmitting ? <Loading /> : 'Save'}
+              {isLoading ? <Loading /> : 'Save'}
             </Button>
           </form>
         </Form>

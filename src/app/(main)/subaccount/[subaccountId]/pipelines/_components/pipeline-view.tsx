@@ -87,7 +87,7 @@ const PipelineView = ({
               {...provided.droppableProps}
               ref={provided.innerRef}
             >
-              <div className="flex mt-4">
+              <div className="flex mt-4 gap-x-1">
                 {allLanes.map((lane, index) => (
                   <PipelineLane
                     allTickets={allTickets}
