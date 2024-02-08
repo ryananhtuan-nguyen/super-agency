@@ -4,6 +4,7 @@ import {
   Notification,
   Prisma,
   Role,
+  SubAccount,
   Tag,
   Ticket,
   User,
@@ -92,3 +93,7 @@ const _getTicketsWithAllRelations = async (laneId: string) => {
 export type TicketDetails = Prisma.PromiseReturnType<
   typeof _getTicketsWithAllRelations
 >
+
+export type SubAccountWithContacts = SubAccount & {
+  Contact: (Contact & { Ticket: Ticket[] })[]
+}
