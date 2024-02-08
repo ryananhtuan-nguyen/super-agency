@@ -11,6 +11,7 @@ import {
   Prisma,
   Role,
   SubAccount,
+  Tag,
   Ticket,
   User,
 } from '@prisma/client'
@@ -879,4 +880,162 @@ export const updateTicketsOrder = async (tickets: Ticket[]) => {
   } catch (error) {
     console.log('🔴 Error reordering tickets', error)
   }
+}
+
+//==============================================================================
+//==============================================================================
+//==============================UPSERT LANES ORDER==============================
+//==============================================================================
+//==============================================================================
+
+export const upsertLane = async (lane: Prisma.LaneUncheckedCreateInput) => {
+  let order: number
+
+  if (!lane.order) {
+    const lanes = await db.lane.findMany({
+      where: {
+        pipelineId: lane.pipelineId,
+      },
+    })
+
+    order = lanes.length
+  } else {
+    order = lane.order
+  }
+
+  const response = await db.lane.upsert({
+    where: { id: lane.id || v4() },
+    update: lane,
+    create: { ...lane, order },
+  })
+
+  return response
+}
+
+//==============================================================================
+//==============================================================================
+//==============================DELETE LANE ORDER===============================
+//==============================================================================
+//==============================================================================
+
+export const deleteLane = async (laneId: string) => {
+  const resposne = await db.lane.delete({ where: { id: laneId } })
+  return resposne
+}
+
+//==============================================================================
+//==============================================================================
+//==============================GET TICKETS WITH TAGS===========================
+//==============================================================================
+//==============================================================================
+
+export const getTicketsWithTags = async (pipelineId: string) => {
+  const response = await db.ticket.findMany({
+    where: {
+      Lane: {
+        pipelineId,
+      },
+    },
+    include: { Tags: true, Assigned: true, Customer: true },
+  })
+  return response
+}
+
+//==============================================================================
+//==============================================================================
+//==============================UPSERT TICKETS===========================
+//==============================================================================
+//==============================================================================
+
+export const upsertTicket = async (
+  ticket: Prisma.TicketUncheckedCreateInput,
+  tags: Tag[]
+) => {
+  let order: number
+  if (!ticket.order) {
+    const tickets = await db.ticket.findMany({
+      where: { laneId: ticket.laneId },
+    })
+    order = tickets.length
+  } else {
+    order = ticket.order
+  }
+
+  const response = await db.ticket.upsert({
+    where: {
+      id: ticket.id || v4(),
+    },
+    update: { ...ticket, Tags: { set: tags } },
+    create: { ...ticket, Tags: { connect: tags }, order },
+    include: {
+      Assigned: true,
+      Customer: true,
+      Tags: true,
+      Lane: true,
+    },
+  })
+
+  return response
+}
+
+//==============================================================================
+//==============================================================================
+//==============================UPSERT TICKETS===========================
+//==============================================================================
+//==============================================================================
+
+export const deleteTicket = async (ticketId: string) => {
+  const response = await db.ticket.delete({
+    where: {
+      id: ticketId,
+    },
+  })
+
+  return response
+}
+
+//==============================================================================
+//==============================================================================
+//==============================GET SUBACCOUNT TEAM MEMBERS===========================
+//==============================================================================
+//==============================================================================
+
+export const getSubAccountTeamMembers = async (subaccountId: string) => {
+  const subaccountUsersWithAccess = await db.user.findMany({
+    where: {
+      Agency: {
+        SubAccount: {
+          some: {
+            id: subaccountId,
+          },
+        },
+      },
+      role: 'SUBACCOUNT_USER',
+      Permissions: {
+        some: {
+          subAccountId: subaccountId,
+          access: true,
+        },
+      },
+    },
+  })
+
+  return subaccountUsersWithAccess
+}
+
+//==============================================================================
+//==============================================================================
+//==============================SEARCH FOR CONTACTS===========================
+//==============================================================================
+//==============================================================================
+
+export const searchContacts = async (searchTerms: string) => {
+  const response = await db.contact.findMany({
+    where: {
+      name: {
+        contains: searchTerms,
+      },
+    },
+  })
+  return response
 }

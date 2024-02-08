@@ -12,6 +12,7 @@ import {
   getAuthUserDetails,
   getMedia,
   getPipelineDetails,
+  getTicketsWithTags,
   getUserPermissions,
 } from './queries'
 import { db } from './db'
@@ -71,4 +72,23 @@ export type LaneDetail = Lane & {
 
 export type PipelineDetailsWithLanesCardsTagsTickets = Prisma.PromiseReturnType<
   typeof getPipelineDetails
+>
+
+export type TicketWithTags = Prisma.PromiseReturnType<typeof getTicketsWithTags>
+
+const _getTicketsWithAllRelations = async (laneId: string) => {
+  const response = await db.ticket.findMany({
+    where: { laneId: laneId },
+    include: {
+      Assigned: true,
+      Customer: true,
+      Lane: true,
+      Tags: true,
+    },
+  })
+  return response
+}
+
+export type TicketDetails = Prisma.PromiseReturnType<
+  typeof _getTicketsWithAllRelations
 >
