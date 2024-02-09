@@ -17,6 +17,7 @@ import {
   getUserPermissions,
 } from './queries'
 import { db } from './db'
+import Stripe from 'stripe'
 
 export type NotificationWithUser =
   | (Notification & {
@@ -117,3 +118,5 @@ export type StripeCustomerType = {
   shipping: ShippingInfo
   address: Address
 }
+
+export type PricesList = Stripe.ApiList<Stripe.Price>
