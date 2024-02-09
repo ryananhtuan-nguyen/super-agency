@@ -456,8 +456,8 @@ model Notification {
 }
 
 enum Plan {
-  price_1OYxkqFj9oKEERu1NbKUxXxN
-  price_1OYxkqFj9oKEERu1KfJGWxgN
+  price_1OhmJYLS92xPfAtPSsYnW8rb
+  price_1OhmJYLS92xPfAtPHzu6odrF
 }
 
 model Subscription {
@@ -472,7 +472,7 @@ model Subscription {
   priceId              String
   customerId           String
   currentPeriodEndDate DateTime
-  subscriptionId     String   @unique
+  subscriptionId       String   @unique
 
   agencyId String? @unique
   Agency   Agency? @relation(fields: [agencyId], references: [id])
