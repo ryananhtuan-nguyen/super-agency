@@ -59,7 +59,7 @@ const ContactPage = async ({ params }: Props) => {
     return amt.format(laneAmt)
   }
   return (
-    <BlurPage>
+    <>
       <h1 className="text-4xl p-4">Contacts</h1>
       <CraeteContactButton subaccountId={params.subaccountId} />
       <Table>
@@ -99,7 +99,7 @@ const ContactPage = async ({ params }: Props) => {
           ))}
         </TableBody>
       </Table>
-    </BlurPage>
+    </>
   )
 }
 
