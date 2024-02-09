@@ -72,12 +72,14 @@ export async function POST(req: Request) {
       })
 
       console.log('🟢 Created subscription')
+      console.log('SUBID', subscription.id)
+      console.log('DATA', subscription)
 
       return NextResponse.json({
         subscriptionId: subscription.id,
         clientSecret:
           //@ts-ignore
-          subscriptionExists.latest_invoice.payment_intent.client_secret,
+          subscription.latest_invoice.payment_intent.client_secret,
       })
     }
   } catch (error) {
