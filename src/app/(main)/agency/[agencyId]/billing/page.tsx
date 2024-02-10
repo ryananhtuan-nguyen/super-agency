@@ -75,7 +75,9 @@ const BillingPage = async ({ params }: Props) => {
       <div className="flex flex-col lg:!flex-row justify-between gap-8">
         <PricingCard
           planExists={agencySubscription?.Subscription?.active === true}
-          prices={prices.data}
+          prices={prices.data.filter(
+            (item) => item.product !== process.env.NEXT_SUPER_AGENCY_PRODUCT_ID
+          )}
           customerId={agencySubscription?.customerId || ''}
           amt={
             agencySubscription?.Subscription?.active === true
@@ -110,10 +112,14 @@ const BillingPage = async ({ params }: Props) => {
               : 'Starter'
           }
         />
+
         {addOns.data.map((addOn) => (
           <PricingCard
             planExists={agencySubscription?.Subscription?.active === true}
-            prices={prices.data}
+            prices={prices.data.filter(
+              (item) =>
+                item.product === process.env.NEXT_SUPER_AGENCY_PRODUCT_ID
+            )}
             customerId={agencySubscription?.customerId || ''}
             key={addOn.id}
             amt={
@@ -127,7 +133,7 @@ const BillingPage = async ({ params }: Props) => {
             description="Dedicated support line & teams channel for support"
             duration="/ month"
             features={[]}
-            title={'24/7 priority support'}
+            title="24/7 priority support"
             highlightTitle="Get support now!"
             highlightDescription="Get priority support and skip the long long with the click of a button."
           />

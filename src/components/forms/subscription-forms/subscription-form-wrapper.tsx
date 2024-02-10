@@ -81,6 +81,7 @@ const SubscriptionFormWrapper = ({ customerId, planExists }: Props) => {
     //call function
     createSecret()
   }, [data, selectedPriceId, customerId])
+  console.log(data)
 
   return (
     <div className="border-none transition-all">
