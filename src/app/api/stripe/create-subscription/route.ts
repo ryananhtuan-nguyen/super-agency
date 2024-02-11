@@ -25,7 +25,7 @@ export async function POST(req: Request) {
           'Could not find the subscription Id to update the subscription.'
         )
       }
-      console.log('Updating the subscription')
+      console.log('Updating the subscription LINE28 create-sub route')
       const currentSubscriptionDetails = await stripe.subscriptions.retrieve(
         subscriptionExists.Subscription.subscriptionId
       )
@@ -43,6 +43,8 @@ export async function POST(req: Request) {
           expand: ['latest_invoice.payment_intent'],
         }
       )
+      console.log('🚀 ~ POST ~ create-subscription route line46:', subscription)
+
       return NextResponse.json({
         subscriptionId: subscription.id,
         //@ts-ignore
