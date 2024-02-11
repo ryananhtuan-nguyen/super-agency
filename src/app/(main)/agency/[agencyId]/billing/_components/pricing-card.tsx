@@ -68,12 +68,12 @@ const PricingCard = ({
   return (
     <Card className="flex flex-col justify-between lg:w-1/2">
       <div>
-        <CardHeader className="flex flex-col md:!flex-row justify-between">
+        <CardHeader className="flex !flex-row justify-between">
           <div>
             <CardTitle>{title}</CardTitle>
             <CardDescription>{description}</CardDescription>
           </div>
-          <p className="text-6xl font-bold">
+          <p className="text-5xl font-bold">
             {amt}
             <small className="text-xs font-light text-muted-foreground">
               {duration}
