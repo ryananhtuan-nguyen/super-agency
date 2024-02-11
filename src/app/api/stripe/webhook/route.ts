@@ -50,11 +50,10 @@ export async function POST(req: NextRequest) {
                 subscription,
                 subscription.customer as string
               )
-              console.log('CREATED FROM WEBHOOK 💳', subscription)
+              console.log('CREATED NEW SUB FROM WEBHOOK LINE53 💳')
             } else {
               console.log(
-                'SKIPPED AT CREATED FROM WEBHOOK 💳 because subscription status is not active',
-                subscription
+                'SKIPPED AT CREATED FROM WEBHOOK 💳 because subscription status is not active LINE56 webhook'
               )
               break
             }
