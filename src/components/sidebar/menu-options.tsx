@@ -1,18 +1,22 @@
 'use client'
+import { useEffect, useMemo, useState } from 'react'
+import { ChevronsUpDown, Compass, Menu, PlusCircleIcon } from 'lucide-react'
 import {
   Agency,
   AgencySidebarOption,
   SubAccount,
   SubAccountSidebarOption,
 } from '@prisma/client'
-import React, { useEffect, useMemo, useState } from 'react'
-import { Sheet, SheetClose, SheetContent, SheetTrigger } from '../ui/sheet'
-import { Button } from '../ui/button'
-import { ChevronsUpDown, Compass, Menu, PlusCircleIcon } from 'lucide-react'
-import { cn } from '@/lib/utils'
-import { AspectRatio } from '../ui/aspect-ratio'
 import Image from 'next/image'
-import { Popover, PopoverContent, PopoverTrigger } from '../ui/popover'
+import Link from 'next/link'
+
+import { icons } from '@/lib/constants'
+import { cn } from '@/lib/utils'
+import { useModal } from '@/providers/modal-provider'
+import SubAccountDetails from '../forms/subaccount-details'
+import CustomModal from '../global/custom-modal'
+import { AspectRatio } from '../ui/aspect-ratio'
+import { Button } from '../ui/button'
 import {
   Command,
   CommandEmpty,
@@ -21,13 +25,9 @@ import {
   CommandItem,
   CommandList,
 } from '../ui/command'
-import Link from 'next/link'
-import { useModal } from '@/providers/modal-provider'
-import CustomModal from '../global/custom-modal'
-import SubAccountDetails from '../forms/subaccount-details'
-import AgencyDetails from '../forms/agency-details'
+import { Popover, PopoverContent, PopoverTrigger } from '../ui/popover'
 import { Separator } from '../ui/separator'
-import { icons } from '@/lib/constants'
+import { Sheet, SheetClose, SheetContent, SheetTrigger } from '../ui/sheet'
 
 type Props = {
   defaultOpen?: boolean
